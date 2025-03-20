@@ -1,3 +1,7 @@
 node_modules/
 
+# ya jangan lah ma sigma
 .env
+
+# kebanyakan nanti kocak yang di push
+dist/
