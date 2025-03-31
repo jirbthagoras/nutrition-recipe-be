@@ -11,6 +11,8 @@ export const validateDTO = (schema: ObjectSchema) => {
                 message: "Failed on Validation",
                 details: error.details.map((err) => err.message), // Extract error messages
             });
+
+            return
         }
 
         next();

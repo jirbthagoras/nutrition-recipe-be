@@ -1,10 +1,10 @@
 import {Request, Response} from 'express';
 import { registerUserSchema } from "../dtos/user.dtos";
 import { createUser } from "../services/user.service";
-import {AppError, createError, isAppError} from "../exceptions/error";
+import {generateToken} from "../utils/auth.utils";
+import {asyncHandler} from "../exceptions/async_handler.exception";
 
-export const registerController = async (req: Request, res: Response) => {
-    try {
+export const registerController = asyncHandler(async (req: Request, res: Response) => {
         const {
             username,
             email,
@@ -16,33 +16,7 @@ export const registerController = async (req: Request, res: Response) => {
         res.status(201).json({
             status: "success",
             message: "User registered successfully",
-            data: user
+            token: generateToken(user.id)
         });
-    } catch (error) {
-        // if (error instanceof createError) {
-        //     const err = error as AppError;
-        //
-        //     res.status(err.statusCode).json({
-        //         status: err.status,
-        //         message: err.message,
-        //         error: err.error
-        //     });
-        // }
-
-        if (isAppError(error)) {
-            const err = error as AppError;
-
-            res.status(err.statusCode).json({
-                status: err.status,
-                message: err.message,
-                error: err.error
-            });
-        }
-
-        // res.status(400).json({
-        //     status: "jelek",
-        //     message: "jelek",
-        //     error: "kocak"
-        // });
-    }
-}
+        return
+})

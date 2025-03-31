@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 
 const SECRET: string = String(process.env.JWT_SECRET_KEY);
 
-export const generateToken = (userId: string) => {
+export const generateToken = (userId: number) => {
     return jwt.sign({ userId }, SECRET);
 }
 

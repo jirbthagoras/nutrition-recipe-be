@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export const createUser = async (
     username: string,
     email: string,
-    password: string,
+    password: string
 ) => {
     if (
         await prisma.users.findUnique({ where: { email } })
@@ -21,8 +21,7 @@ export const createUser = async (
         data: {
             username,
             password: hashedPassword,
-            email,
-            role: "USER"
+            email
         }
     })
 }
