@@ -1,5 +1,6 @@
 import {AppError, isAppError} from "./error";
 import {Request, Response, NextFunction} from "express";
+import { logger } from "../utils/logging.utils";
 
 export const errorHandler = (err: AppError, _: Request, res: Response, __: NextFunction) => {
 
@@ -10,14 +11,16 @@ export const errorHandler = (err: AppError, _: Request, res: Response, __: NextF
             error: err.error
         })
 
+        logger.error(`${err.status}, message: ${err.message}`);
+
         return
     }
 
-    console.error("Internal server error", err)
     res.status(500).json({
         status: "error",
         message: "Internal server error"
     })
+    logger.error(`Internal server error`, err);
 
     return
 
