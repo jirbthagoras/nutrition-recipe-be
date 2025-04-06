@@ -1,4 +1,4 @@
-import {AppError, isAppError} from "./error";
+import {AppError, isAppError} from "./error.exception";
 import {Request, Response, NextFunction} from "express";
 import { logger } from "../utils/logging.utils";
 

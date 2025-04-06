@@ -9,9 +9,10 @@ export const generateToken = (userId: number) => {
 
 export const verifyToken = (token: string) => {
     try {
-        return jwt.verify(token, SECRET);
+        const decoded = jwt.verify(token, SECRET)
+        return true
     } catch (error) {
-        return error
+        return false
     }
 }
 

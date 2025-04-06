@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { verifyToken } from "../utils/auth.utils";
-import {AppError, createError} from "../exceptions/error";
+import {AppError, createError} from "../exceptions/error.exception";
+import jwt from "jsonwebtoken";
 
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const token: string | undefined = req.headers.authorization?.split(' ')[1];
@@ -15,7 +16,7 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
     if(!verifyToken(token)) {
         throw createError(
             "Unauthorized",
-            "Token Invalid",
+            "Invalid Token",
             401
         );
     }
