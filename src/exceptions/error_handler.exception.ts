@@ -16,11 +16,11 @@ export const errorHandler = (err: AppError, _: Request, res: Response, __: NextF
         return
     }
 
-    res.status(500).json({
-        status: "error",
-        message: "Internal server error"
-    })
-    logger.error(`Internal server error`, err);
+    // res.status(500).json({
+    //     status: "error",
+    //     message: "Internal server error"
+    // })
+    // logger.error(`Internal server error`, err);
 
     return
 

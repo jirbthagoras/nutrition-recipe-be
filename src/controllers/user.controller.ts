@@ -1,10 +1,13 @@
 import {Request, Response} from 'express';
 import { registerUserSchema } from "../dtos/user.dtos";
 import {createUser, getUser} from "../services/user.service";
-import {comparePassword, generateToken} from "../utils/auth.utils";
+import {comparePassword, generateAccessToken, generateRefreshToken} from "../utils/auth.utils";
 import {asyncHandler} from "../exceptions/async_handler.exception";
 import { logger } from "../utils/logging.utils";
 import {createError} from "../exceptions/error.exception";
+import { createRefreshToken, deleteToken, getToken } from '../services/token.service';
+import { ref } from 'joi';
+import { create } from 'domain';
 
 export const registerController = asyncHandler(async (req: Request, res: Response) => {
         const {
@@ -43,11 +46,24 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
         throw createError("failed", "Wrong password", 400)
     }
 
+    const refreshToken = await createRefreshToken(user.id)
+
+    console.log(refreshToken);
+
+    res.cookie('refreshToken', refreshToken, {
+        httpOnly: true, 
+        secure: true,
+        sameSite: 'strict',
+        path: "/api/v1/auth",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+})
+
     res.status(200).json({
         status: "success",
         message: "Successfully logged in",
-        token: generateToken(user.id)
+        token: generateAccessToken(user.id)
     });
+    
     return
 })
 
@@ -69,4 +85,23 @@ export const getUserController = asyncHandler(async (req: Request, res: Response
             }
         }
     });
+})
+
+export const logout = asyncHandler(async (req: Request, res: Response) => {
+    const token = req.cookies.refreshToken;
+
+    if (!token) {
+        throw createError("failed", "Please attach RefreshToken", 400);
+    };
+
+    await deleteToken(token);
+
+    res.clearCookie("refreshToken");
+
+    res.status(200).json({
+        status: "success",
+        message: "Successfully Logged out",
+    });
+
+    return
 })

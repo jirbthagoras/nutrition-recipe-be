@@ -1,16 +1,34 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { userInfo } from "os";
 
-const SECRET: string = String(process.env.JWT_SECRET_KEY);
+const ACCESS_KEY: string = String(process.env.JWT_SECRETA_ACCESS_KEY);
+const REFRESH_KEY: string = String(process.env.JWT_SECRET_REFRESH_KEY);
 
-export const generateToken = (userId: number) => {
-    return jwt.sign({ userId }, SECRET);
+
+export const generateAccessToken = (userId: number) => {
+    return jwt.sign({ userId }, ACCESS_KEY, {
+        expiresIn: "15m"
+    });
 }
 
-export const verifyToken = (token: string) => {
+export const generateRefreshToken = (userId: number) => {
+    return jwt.sign({ userId }, REFRESH_KEY, {
+        expiresIn: "7d"
+    });
+}
+
+export const verifyAccessToken = (token: string) => {
     try {
-        const decoded = jwt.verify(token, SECRET)
-        return true
+        return jwt.verify(token, ACCESS_KEY) 
+    } catch (error) {
+        return false
+    }
+}
+
+export const verifyRefreshToken = (token: string) => {
+    try {
+        return jwt.verify(token, REFRESH_KEY)
     } catch (error) {
         return false
     }
