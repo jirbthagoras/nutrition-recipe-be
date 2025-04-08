@@ -2,9 +2,12 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { userInfo } from "os";
 
-const ACCESS_KEY: string = String(process.env.JWT_SECRETA_ACCESS_KEY);
+const ACCESS_KEY: string = String(process.env.JWT_SECRET_ACCESS_KEY);
 const REFRESH_KEY: string = String(process.env.JWT_SECRET_REFRESH_KEY);
 
+interface JwtPayload {
+    userId: number
+}
 
 export const generateAccessToken = (userId: number) => {
     return jwt.sign({ userId }, ACCESS_KEY, {
@@ -20,7 +23,7 @@ export const generateRefreshToken = (userId: number) => {
 
 export const verifyAccessToken = (token: string) => {
     try {
-        return jwt.verify(token, ACCESS_KEY) 
+        return jwt.verify(token, ACCESS_KEY) as JwtPayload
     } catch (error) {
         return false
     }
@@ -28,7 +31,7 @@ export const verifyAccessToken = (token: string) => {
 
 export const verifyRefreshToken = (token: string) => {
     try {
-        return jwt.verify(token, REFRESH_KEY)
+        return jwt.verify(token, REFRESH_KEY) as JwtPayload
     } catch (error) {
         return false
     }

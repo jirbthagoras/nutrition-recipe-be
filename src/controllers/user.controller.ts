@@ -1,7 +1,7 @@
 import {Request, Response} from 'express';
 import { registerUserSchema } from "../dtos/user.dtos";
 import {createUser, getUser} from "../services/user.service";
-import {comparePassword, generateAccessToken, generateRefreshToken} from "../utils/auth.utils";
+import {comparePassword, generateAccessToken, generateRefreshToken, verifyRefreshToken} from "../utils/auth.utils";
 import {asyncHandler} from "../exceptions/async_handler.exception";
 import { logger } from "../utils/logging.utils";
 import {createError} from "../exceptions/error.exception";
@@ -44,17 +44,16 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
 
     if(!await comparePassword(password, user.password)) {
         throw createError("failed", "Wrong password", 400)
+        return
     }
 
     const refreshToken = await createRefreshToken(user.id)
-
-    console.log(refreshToken);
 
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true, 
         secure: true,
         sameSite: 'strict',
-        path: "/api/v1/auth",
+        path: "/api/v1",
         maxAge: 7 * 24 * 60 * 60 * 1000
 })
 
@@ -68,11 +67,14 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
 })
 
 export const getUserController = asyncHandler(async (req: Request, res: Response) => {
-    const {
-        userId
-    } = req.params
+    const token = verifyRefreshToken(req.cookies.refreshToken)
 
-    const user = await getUser({ id: Number(userId) });
+    if (!token) {
+        throw createError("failed", "Please attach token", 400);
+        return
+    }
+
+    const user = await getUser({ id: token.userId });
 
     res.status(200).json({
         status: "success",
@@ -85,6 +87,8 @@ export const getUserController = asyncHandler(async (req: Request, res: Response
             }
         }
     });
+
+    return
 })
 
 export const logout = asyncHandler(async (req: Request, res: Response) => {
@@ -92,6 +96,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
 
     if (!token) {
         throw createError("failed", "Please attach RefreshToken", 400);
+        return
     };
 
     await deleteToken(token);
