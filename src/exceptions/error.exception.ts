@@ -9,8 +9,8 @@ export const isAppError = (error: any): error is AppError => {
     return (
         typeof error === "object" &&
         error !== null &&
-        "status" in error &&
         "message" in error &&
+        "status" in error &&
         "statusCode" in error
     );
 };
