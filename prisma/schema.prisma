@@ -19,37 +19,49 @@ enum Role {
 }
 
 model Users {
-  id       Int    @id @default(autoincrement())
-  username String @db.Char(30)
-  email    String @unique
-  role     Role   @default(USER)
-  password String
+  id           Int            @id @default(autoincrement())
+  username     String         @db.Char(30)
+  email        String         @unique
+  role         Role           @default(USER)
+  password     String
   RefreshToken RefreshToken[]
+  Complaints   Complaints[]
 }
 
 model RefreshToken {
-  id Int @id @default(autoincrement())
-  token String @unique
-  user Users @relation(fields: [userId], references: [id])
-  userId Int
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
   createdAt DateTime @default(now())
   expiredAt DateTime
+  user      Users    @relation(fields: [userId], references: [id])
 }
 
-// model Products {
-//   id          Int         @id @default(autoincrement())
-//   user        Users       @relation(fields: [userId], references: [id])
-//   userId      Int
-//   name        String
-//   stock       Int
-//   description String      @db.Text
-//   nutrition   String      @db.Text
-//   Histories   Histories[]
-// }
-//
-// model Histories {
-//   id        Int      @id @default(autoincrement())
-//   date      DateTime @default(now())
-//   product   Products @relation(fields: [productId], references: [id])
-//   productId Int
-// }
+model Complaints {
+  id        Int    @id @default(autoincrement())
+  complaint String
+  message String
+  userId    Int
+  user      Users  @relation(fields: [userId], references: [id])
+  Reccomendation Recommendation[]
+}
+
+model Products {
+  id        Int    @id @default(autoincrement())
+  name String @unique
+  fat String
+  cloricValue String
+  protein String
+  iron String
+  calcium String
+  thiamine String
+  Recommendation Recommendation[]
+}
+
+model Recommendation {
+  id        Int    @id @default(autoincrement())
+  complaintId Int
+  productId Int
+  complaint Complaints @relation(fields: [complaintId], references: [id])
+  product Products @relation(fields: [productId], references: [id])
+}

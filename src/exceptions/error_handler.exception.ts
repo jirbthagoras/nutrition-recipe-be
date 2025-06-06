@@ -12,7 +12,6 @@ export const errorHandler = (err: AppError, _: Request, res: Response, __: NextF
         })
 
         logger.error(`${err.status}, message: ${err.message}`);
-
         return
     }
 

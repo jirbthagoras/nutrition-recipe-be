@@ -10,14 +10,14 @@ interface JwtPayload {
 }
 
 export const generateAccessToken = (userId: number) => {
-    return jwt.sign({ userId }, ACCESS_KEY, {
-        expiresIn: "15m"
+    return jwt.sign({userId}, ACCESS_KEY, {
+        expiresIn: "15m",
     });
 }
 
 export const generateRefreshToken = (userId: number) => {
-    return jwt.sign({ userId }, REFRESH_KEY, {
-        expiresIn: "7d"
+    return jwt.sign({userId}, REFRESH_KEY, {
+        expiresIn: "7d",
     });
 }
 

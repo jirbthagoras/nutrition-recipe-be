@@ -33,7 +33,6 @@ export const getToken = async (token: string) => {
 }
 
 export const deleteToken = async (token: string) => {
-
      if(!await getToken(token)) {
           throw createError("failed", "Logout failed, token invalid", 400)
      }
