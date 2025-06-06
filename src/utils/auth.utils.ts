@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { userInfo } from "os";
+import { createError } from "../exceptions/error.exception";
+import { Request } from "express";
 
 const ACCESS_KEY: string = String(process.env.JWT_SECRET_ACCESS_KEY);
 const REFRESH_KEY: string = String(process.env.JWT_SECRET_REFRESH_KEY);
@@ -13,6 +15,29 @@ export const generateAccessToken = (userId: number) => {
     return jwt.sign({userId}, ACCESS_KEY, {
         expiresIn: "15m",
     });
+}
+
+export const getUserIdFromJWT = (req: Request) => {
+    const token: string | undefined = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            throw createError(
+                "Unauthorized",
+                "Token Required",
+                401
+            );
+        }
+
+        const verifiedToken = verifyAccessToken(token)
+     
+        if(!verifiedToken) {
+            throw createError(
+                "Unauthorized",
+                "Invalid Token",
+                401
+            );
+        }
+
+        return verifiedToken.userId
 }
 
 export const generateRefreshToken = (userId: number) => {
