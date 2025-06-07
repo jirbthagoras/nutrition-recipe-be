@@ -4,7 +4,7 @@ import { getUserIdFromJWT, verifyAccessToken } from "../utils/auth.utils";
 import { createError } from "../exceptions/error.exception";
 import { sendComplaint } from "../services/gemini.service";
 import { createReccomendation } from "../services/recommendation.service";
-import { createComplaint, getComplaintById } from "../services/complaint.service";
+import { createComplaint, getAllComplaintByUserId, getComplaintById } from "../services/complaint.service";
 import { createProduct } from "../services/product.service";
 import { logger } from "../utils/logging.utils";
 
@@ -41,5 +41,20 @@ export const makeComplaint = asyncHandler(async (req: Request, res: Response) =>
      return res.status(201).json({
           status: "success",
           complaint: result
+     })
+})
+
+export const getComplaintHistory = asyncHandler(async (req: Request, res: Response) => {
+     // get user id from the token
+     const userId = getUserIdFromJWT(req);
+     logger.info(userId)
+
+     // Calls the service
+     const result = await getAllComplaintByUserId(userId)
+
+     // returns
+     return res.status(201).json({
+          status: "success",
+          history: result
      })
 })

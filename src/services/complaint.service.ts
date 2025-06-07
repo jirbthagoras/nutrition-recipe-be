@@ -44,3 +44,26 @@ export const getComplaintById = async (
      logger.info(`Complaint ${complaint.id} found`)
      return complaint
 }
+
+export const getAllComplaintByUserId = async(
+     userId: number
+) => {
+     const complaints = await prisma.complaints.findMany({
+          where: {userId},
+          include: {
+               Reccomendation: {
+                    include: {
+                         product: true
+                    }
+               }
+          }
+     })
+     
+     if (!complaints) {
+          logger.error("Complaint not found!")
+          throw createError("not found", "Internal server error", 500)
+          return
+     }
+
+     return complaints
+}
