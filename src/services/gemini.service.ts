@@ -16,7 +16,7 @@ export const sendComplaint = async (
   const prompt = `
 You are a professional nutritionist and food expert with years of experience helping patients.
 Respond to this user complaint like a kind, helpful nutritionist. 
-Also give 3 food recommendations in the following strict JSON format only:
+Also give 10 food recommendations in the following strict JSON format only:
 
 {
   "message": "<your reply to the user>",

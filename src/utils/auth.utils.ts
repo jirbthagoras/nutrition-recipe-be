@@ -37,7 +37,30 @@ export const getUserIdFromJWT = (req: Request) => {
             );
         }
 
-    return verifiedToken
+    return verifiedToken.userId
+}
+
+export const getUserIdFromJWTRefresh = (req: Request) => {
+    const token: string | undefined = req.headers.authorization?.split(' ')[1];
+        if (!token) {
+            throw createError(
+                "Unauthorized",
+                "Token Required",
+                401
+            );
+        }
+
+        const verifiedToken = verifyRefreshToken(token)
+     
+        if(!verifiedToken) {
+            throw createError(
+                "Unauthorized",
+                "Invalid Token",
+                401
+            );
+        }
+
+    return verifiedToken.userId
 }
 
 export const generateRefreshToken = (userId: number) => {

@@ -16,7 +16,7 @@ export const makeComplaint = asyncHandler(async (req: Request, res: Response) =>
 
      // get user id from the token
      const userId = getUserIdFromJWT(req);
-     logger.info(userId.userId)
+     logger.info(userId)
 
      // send the complaint with sendComplaint from gemini service
      let response = await sendComplaint(complaint)
@@ -24,7 +24,7 @@ export const makeComplaint = asyncHandler(async (req: Request, res: Response) =>
      logger.info(response.products)
 
      // create a complaint
-     const complaintId = await createComplaint(complaint, response.message, userId.userId)
+     const complaintId = await createComplaint(complaint, response.message, userId)
      logger.info(complaintId)
 
      // Iterate through the result.products to:
