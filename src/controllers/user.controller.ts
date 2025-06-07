@@ -55,7 +55,8 @@ export const loginController = asyncHandler(async (req: Request, res: Response) 
         sameSite: 'strict',
         path: "/api/v1",
         maxAge: 7 * 24 * 60 * 60 * 1000
-})
+    }
+)
 
     res.status(200).json({
         status: "success",

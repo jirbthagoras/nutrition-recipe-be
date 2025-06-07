@@ -2,13 +2,14 @@ import { PrismaClient } from "@prisma/client"
 import { logger } from "../utils/logging.utils"
 import { createError } from "../exceptions/error.exception"
 
-const prisma = new PrismaClient
+const prisma = new PrismaClient()
 
 export const createComplaint = async (
      complaint: string,
      message: string,
      userId: number,
 ) => {
+     logger.info("Creating complaint")
      const newComplaint = await prisma.complaints.create({
           data: {
                complaint,
@@ -40,6 +41,6 @@ export const getComplaintById = async (
           return
      }
 
-     logger.info(`Complain ${complaint.id} found`)
+     logger.info(`Complaint ${complaint.id} found`)
      return complaint
 }

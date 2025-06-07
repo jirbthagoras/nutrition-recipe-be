@@ -10,7 +10,7 @@ export const createProduct = async(
      // search if there is a product with those name
      const result = await prisma.products.findUnique({
           where: {
-               name: product.Name.toLowerCase()
+               name: product.Name
           }
      })
 

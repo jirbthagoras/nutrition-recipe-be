@@ -38,30 +38,30 @@ model RefreshToken {
 }
 
 model Complaints {
-  id        Int    @id @default(autoincrement())
-  complaint String
-  message String
-  userId    Int
-  user      Users  @relation(fields: [userId], references: [id])
+  id             Int              @id @default(autoincrement())
+  complaint      String @db.Text
+  message        String @db.Text
+  userId         Int
+  user           Users            @relation(fields: [userId], references: [id])
   Reccomendation Recommendation[]
 }
 
 model Products {
-  id        Int    @id @default(autoincrement())
-  name String @unique
-  fat String
-  cloricValue String
-  protein String
-  iron String
-  calcium String
-  thiamine String
+  id             Int              @id @default(autoincrement())
+  name           String           @unique
+  fat            String
+  cloricValue    String
+  protein        String
+  iron           String
+  calcium        String
+  thiamine       String
   Recommendation Recommendation[]
 }
 
 model Recommendation {
-  id        Int    @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   complaintId Int
-  productId Int
-  complaint Complaints @relation(fields: [complaintId], references: [id])
-  product Products @relation(fields: [productId], references: [id])
+  productId   Int
+  complaint   Complaints @relation(fields: [complaintId], references: [id])
+  product     Products   @relation(fields: [productId], references: [id])
 }

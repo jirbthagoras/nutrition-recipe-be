@@ -37,7 +37,7 @@ export const getUserIdFromJWT = (req: Request) => {
             );
         }
 
-        return verifiedToken.userId
+    return verifiedToken
 }
 
 export const generateRefreshToken = (userId: number) => {

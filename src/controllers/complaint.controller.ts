@@ -6,6 +6,7 @@ import { sendComplaint } from "../services/gemini.service";
 import { createReccomendation } from "../services/recommendation.service";
 import { createComplaint, getComplaintById } from "../services/complaint.service";
 import { createProduct } from "../services/product.service";
+import { logger } from "../utils/logging.utils";
 
 export const makeComplaint = asyncHandler(async (req: Request, res: Response) => {
      // Get the payload given by client side
@@ -15,25 +16,27 @@ export const makeComplaint = asyncHandler(async (req: Request, res: Response) =>
 
      // get user id from the token
      const userId = getUserIdFromJWT(req);
+     logger.info(userId.userId)
 
      // send the complaint with sendComplaint from gemini service
      let response = await sendComplaint(complaint)
+     logger.info(response.message)
+     logger.info(response.products)
 
      // create a complaint
-     const complaintId = await createComplaint(complaint, response.message, userId)
+     const complaintId = await createComplaint(complaint, response.message, userId.userId)
+     logger.info(complaintId)
 
      // Iterate through the result.products to:
      // Create a product if it's not exist
      // Create recommendations by products id
-     response.products.forEach(async product => {
-          // Create product
-          let productId = await createProduct(product)
-          // Craete recommendation
-          await createReccomendation(complaintId, productId)
-     });
+     for (const product of response.products) {
+          const productId = await createProduct(product);
+          await createReccomendation(complaintId, productId);
+     }
 
      // Query the complaint with it's recommendation
-     const result = getComplaintById(complaintId)
+     const result = await getComplaintById(complaintId)
 
      return res.status(201).json({
           status: "success",
