@@ -8,7 +8,7 @@ A Backend Project implementing some technologies such as ExpressJS with Typescri
 
 This time we will be using JWT to secure communication between client and server. This is the API docs that will be updated regularly:
 
-<a href="/">REDACTED</a>
+<a href="https://documenter.getpostman.com/view/34415611/2sB2xFfT5y">CLick Me</a>
 
 # How to run?
 
